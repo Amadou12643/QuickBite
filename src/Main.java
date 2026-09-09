@@ -2,6 +2,8 @@ public class Main {
     public static void main(String[] args) {
 
         // QuickBite
+        // initialize your scanner obj
+        Scanner in = new Scanner(system.in)
         // Items names, prices, and availabilities
         String[] itemName = {"Benachin", "Fufo", "Juice"};
         double[] itemPrice = {5.5, 10.7, 12.5};
