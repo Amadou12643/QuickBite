@@ -1,101 +1,93 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    /**
+     * printFinalPrice
+     * This method is going to determine the final price each customer is paying
+     * @param customer
+     * @param price
+     */
+    public static void  printFinalPrice(Discountable customer, double price){
+        System.out.printf("You pay: GMD%.2f%n", customer.applyDiscount(price));
 
-        // QuickBite
-        // Initialize your scanner object
-        Scanner in = new Scanner(System.in);
-
-        // Items names, prices, and availabilities
-        String[] itemName = {"Benachin", "Fufo", "Juice"};
-        double[] itemPrice = {5.5, 10.7, 12.5};
-        boolean[] itemAvailable = {true, false, true};
-
-        // Add items to the arrays using Scanner
-        do {
-            System.out.println("Are you adding item? Y or N");
-            String userinput = in.next();
-
-            if (userinput.equalsIgnoreCase("n")) {
-                break;
-            }
-
-            System.out.println("Enter item name:");
-            String name = in.next();
-
-            System.out.println("Enter item price:");
-            double price = in.nextDouble();
-
-            System.out.println("Enter item status (true/false):");
-            boolean status = in.nextBoolean();
-
-            System.out.println("Name \t Price \t Status");
-            System.out.println(name + "\t" + price + "\t" + status);
-
-            // Add new item to the store
-
-            // Resize itemName array
-            itemName = Arrays.copyOf(itemName, itemName.length + 1);
-            itemName[itemName.length - 1] = name;
-
-            // Resize itemPrice array
-            itemPrice = Arrays.copyOf(itemPrice, itemPrice.length + 1);
-            itemPrice[itemPrice.length - 1] = price;
-
-            // Resize itemAvailable array
-            itemAvailable = Arrays.copyOf(itemAvailable, itemAvailable.length + 1);
-            itemAvailable[itemAvailable.length - 1] = status;
-
-            System.out.println(Arrays.toString(itemName));
-            System.out.println(Arrays.toString(itemPrice));
-            System.out.println(Arrays.toString(itemAvailable));
-
-        } while (true);
-
-        // Print the items one-by-one
-        System.out.println("\n===== QUICKBITE ITEMS =====");
-
-        for (int i = 0; i < itemName.length; i++) {
-
-            System.out.println("Item: " + itemName[i]);
-            System.out.println("Price: " + itemPrice[i]);
-
-            // Check availability
-            if (itemAvailable[i]) {
-                System.out.println("Available");
-            } else {
-                System.out.println("Sold Out");
-            }
-
-            System.out.println("-------------------");
-        }
-
-        // Linear search by item name
-        System.out.println("\n===== SEARCH ITEM =====");
-        System.out.println("Enter the item name to search:");
-
-        String searchTerm = in.next();
-
-        boolean found = false;
-
-        for (int i = 0; i < itemName.length; i++) {
-
-            if (itemName[i].equalsIgnoreCase(searchTerm)) {
-                System.out.println("Item: " + itemName[i]);
-                System.out.println("Price: " + itemPrice[i]);
-                System.out.println("Available: " + itemAvailable[i]);
-
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            System.out.println(searchTerm + " not found");
-        }
-
-        in.close();
     }
+    public void main() {
+
+
+        // create a FoodTruck obj (object)
+        FoodTruck truck = new FoodTruck();
+        MenuItem item1 = new MenuItem("i1", "Buscuits", 15.00, true);
+        MenuItem item2 = new MenuItem("i2", "Bananas", 100.00, false);
+        MenuItem item3 = new MenuItem("i3", "Driay Chocolete", 250.00, true);
+        MenuItem item4 = new MenuItem("i4", "Cake", 50.00, true);
+        MenuItem item5 = new MenuItem("i5", "Ice Cream", 250.00, false);
+        MenuItem item6 = new MenuItem("i6", "Sawarama", 100.00, true);
+        MenuItem item7 = new MenuItem("i7", "Fruit Drinks", 50.00, true);
+
+        // load the food  truck
+        truck.addItem(item1);
+        truck.addItem(item2);
+        truck.addItem(item3);
+        truck.addItem(item4);
+        truck.addItem(item5);
+        truck.addItem(item6);
+        truck.addItem(item7);
+
+        truck.printMenu();
+
+        // Creating VIP and Regular Customer
+        List<Customer>line = new ArrayList<>();
+        line.add(new RegularCustomer("Lamin"));
+        line.add(new RegularCustomer("Awa"));
+        line.add(new vipCustomer("Binta"));
+        // Printing the priority of customers
+        for (Customer c : line) {
+            System.out.println(c.describe());
+        }
+
+        // Get the first customer from the line
+        if (!line.isEmpty()) {
+            Customer next = line.get(0);
+
+            for (Customer c : line) {
+                // Check for the customer with the highest priority
+                if (c.getPriority() < next.getPriority()) {
+                    next = c;
+                }
+            }
+
+            System.out.println();
+            System.out.println("Serving " +next.getName());
+
+            System.out.println("---------------");
+            printFinalPrice(new RegularCustomer("Lamin"), 100);
+            printFinalPrice(new vipCustomer("Ida"), 100);
+        }
+        System.out.println("----------------------PLACING ORDER ----------------------");
+        //place tree customer
+        truck.placeOrder(new RegularCustomer("Amie"), item1.getCode());
+        truck.placeOrder(new RegularCustomer("Maimuna"), item2.getCode());
+        truck.placeOrder(new RegularCustomer("Isatou"), item3.getCode());
+        truck.placeOrder(new RegularCustomer("kumba"), item4.getCode());
+        truck.placeOrder(new RegularCustomer("Ebriama"), item5.getCode());
+        truck.placeOrder(new vipCustomer("Barry"), item6.getCode());
+
+        System.out.println("------------- SERVER NEXT ----------------");
+        System.out.println(truck.serveNext());
+        System.out.println(truck.serveNext());
+        System.out.println(truck.serveNext());
+        System.out.println(truck.serveNext());
+        System.out.println(truck.serveNext());
+
+        // recent
+        System.out.println("---------------------- RECENT ----------------------");
+        truck.printRecent();
+
+    }
+
+
+    }
+
+
 }
